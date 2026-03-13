@@ -30,8 +30,8 @@ const int UNPINCHED = 90;
 
 // --- Web Server & State Variables ---
 WebServer server(80);
-const char* ssid = "POCO-X7-Pro";
-const char* password = "2444666668888888";
+const char* ssid = ""; //DESIRED SSID IS REQUIRED HERE
+const char* password = ""; //PASSWORD FOR CONNECTING TO WI-FI
 
 bool isAutoMode = true;
 bool isMotorRunning = false;
