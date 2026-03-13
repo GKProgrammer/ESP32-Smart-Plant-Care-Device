@@ -1,0 +1,33 @@
+Components required for ESP32 Smart Plant Care Device:
+
+1. ESP32 DEVKIT V1
+2. OLED Display 128x64 px (I2C)
+3. DHT11 Temperature and Humidity sensor
+4. Resistive or Capacitive soil moisture sensor
+5. SG90 Servo Motor (To be used as water pump or switch for water flow)
+6. Connecting Jumper Wires
+7. 5V 2A Power Adapter
+
+
+ESP32 DEVKIT V1 Wiring Connections:
+
+OLED Display (I2C):
+  VCC -> 3.3V (ESP32)
+  GND -> GND (ESP32)
+  SCL -> GPIO 22
+  SDA -> GPIO 21
+
+DHT11 Sensor:
+  VCC -> 3.3V (ESP32)
+  GND -> GND (ESP32)
+  DATA -> GPIO 4
+
+Resistive Soil Moisture Sensor:
+  VCC -> 3.3V (ESP32)
+  GND -> GND (ESP32)
+  A0 (Analog Out) -> GPIO 34 (This is an input-only pin, perfect for ADC readings)
+
+SG90 Servo (External Power):
+  Red Wire -> External 5V Adapter (+)
+  Brown Wire -> External 5V Adapter (-) AND ESP32 GND
+  Orange Wire (Signal) -> GPIO 13
