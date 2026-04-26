@@ -4,7 +4,7 @@ Components required for ESP32 Smart Plant Care Device:
 2. OLED Display 128x64 px (I2C)
 3. DHT11 Temperature and Humidity sensor
 4. Resistive or Capacitive soil moisture sensor
-5. SG90 Servo Motor (To be used as water pump or switch for water flow)
+5. SG90 Servo Motor (To be used as valve for controlling water flow)
 6. Connecting Jumper Wires
 7. 5V 2A Power Adapter
 8. An active 2.4 Ghz Authentication less or WPA/WPA2 wifi connection
