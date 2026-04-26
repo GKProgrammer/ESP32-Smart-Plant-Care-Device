@@ -30,8 +30,8 @@ const int UNPINCHED = 90;
 
 // --- Web Server & State Variables ---
 WebServer server(80);
-const char* ssid = ""; //DESIRED SSID IS REQUIRED HERE
-const char* password = ""; //PASSWORD FOR CONNECTING TO WI-FI
+const char* ssid = "POCO-X7-Pro";
+const char* password = "2444666668888888";
 
 bool isAutoMode = true;
 bool isMotorRunning = false;
@@ -68,22 +68,72 @@ void setup() {
   pinchServo.attach(SERVO_PIN, 500, 2400);
   pinchServo.write(PINCHED);
 
+  // --- NEW: Non-Blocking Wi-Fi Connection ---
+  display.clearDisplay();
+  display.setTextColor(SSD1306_WHITE);
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.println("Connecting to WiFi:");
+  display.println(ssid);
+  display.display();
+
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
+  int wifiAttempts = 0;
+  
+  // Try to connect for 10 seconds (20 attempts * 500ms)
+  while (WiFi.status() != WL_CONNECTED && wifiAttempts < 20) {
     delay(500);
     Serial.print(".");
+    display.fillRect(0, 30, 128, 20, SSD1306_BLACK); // Clear previous timer
+    display.setCursor(0, 30);
+    display.print("Timeout in: ");
+    display.print(10 - (wifiAttempts / 2)); // Calculate remaining seconds
+    display.print("s");
+    display.display();
+    wifiAttempts++;
   }
-  Serial.println("\nWiFi connected.");
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  // Check if it actually connected or just timed out
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("\nWiFi connected.");
+    Serial.print("Web Server IP Address: http://");
+    Serial.println(WiFi.localIP());
 
-  server.on("/", handleRoot);
-  server.on("/toggle", handleToggleMode);
-  server.on("/water", handleManualWater);
-  server.begin();
+    display.setTextSize(2);
+    display.println("CONNECTED!");
+    display.setTextSize(1);
+    display.setCursor(0, 30);
+    display.println("IP Address:");
+    display.println("------------");
+    display.println(WiFi.localIP());
+    display.println("------------");
+    display.display();
+    delay(8000);
+
+    server.on("/", handleRoot);
+    server.on("/toggle", handleToggleMode);
+    server.on("/water", handleManualWater);
+    server.begin();
+  } else {
+    Serial.println("\nWiFi connection failed! Starting in OFFLINE mode.");
+    isAutoMode = true;
+    display.setTextSize(1);
+    display.println("Connection Failed!");
+    display.setCursor(0, 25);
+    display.println("Starting in:");
+    display.setTextSize(1);
+    display.setCursor(0, 40);
+    display.println("OFFLINE MODE");
+    display.display();
+    delay(5000);
+  }
 }
 
 void loop() {
-  server.handleClient();
-  
+  if (WiFi.status() == WL_CONNECTED) {
+    server.handleClient();
+  }
   currentTemp = dht.readTemperature();
   currentHum = dht.readHumidity();
   
